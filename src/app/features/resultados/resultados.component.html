@@ -1,0 +1,213 @@
+<div class="row">
+  <div class="col-12">
+    <!-- Header dos Resultados -->
+    <div class="card fade-in-up mb-4">
+      <div class="card-header" style="background: linear-gradient(135deg, #ffd700, #ffb347); color: #212529;">
+        <h2 class="mb-0">
+          <i class="fas fa-crown me-2"></i>
+          Resultados dos Premiados
+        </h2>
+        <small class="opacity-75">Confira os ganhadores de cada rodada do bolão! 🏆</small>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-warning">
+          <h5><i class="fas fa-info-circle me-2"></i>Como Funciona:</h5>
+          <ul class="mb-0">
+            <li>Selecione uma <strong>rodada</strong> para ver os premiados</li>
+            <li>Veja quem <strong>ganhou o prêmio</strong> de cada rodada</li>
+            <li>Confira o <strong>ranking completo</strong> de participantes</li>
+            <li>Acompanhe seus <strong>acertos</strong> e posição geral</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seletor de Rodadas -->
+    <div class="card fade-in-up mb-4">
+      <div class="card-header bg-dark text-white">
+        <h4 class="mb-0">
+          <i class="fas fa-calendar-alt me-2"></i>
+          Selecione a Rodada do Bolão
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="row g-2">
+          <div class="col-6 col-md-4 col-lg-3" *ngFor="let rodada of rodadas">
+            <button 
+              class="btn w-100"
+              [class]="rodadaSelecionada === rodada.numero ? 'btn-warning' : 'btn-outline-warning'"
+              (click)="selecionarRodada(rodada.numero)">
+              <i class="fas fa-trophy me-1"></i>
+              {{rodada.nome}}
+              <br>
+              <small [class]="getStatusClass(rodada.status)">
+                {{getStatusText(rodada.status)}}
+              </small>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultados da Rodada Selecionada -->
+    <div class="card fade-in-up" *ngIf="getRodadaAtual() as rodada">
+      <div class="card-header" style="background: linear-gradient(135deg, #ffd700, #ffb347); color: #212529;">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h4 class="mb-0">
+              <i class="fas fa-crown me-2"></i>
+              {{rodada.nome}} - {{rodada.periodo}}
+            </h4>
+          </div>
+          <div class="text-end">
+            <span [class]="getStatusClass(rodada.status)" class="px-3 py-2 me-2">
+              {{getStatusText(rodada.status)}}
+            </span>
+            <span class="badge bg-dark text-white px-3 py-2" *ngIf="rodada.status === 'finalizado'">
+              {{rodada.totalParticipantes}} Participantes
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aguardando ou Em Andamento -->
+      <div class="card-body text-center" *ngIf="rodada.status !== 'finalizado'">
+        <div class="alert alert-info">
+          <i class="fas fa-clock fa-3x mb-3 text-primary"></i>
+          <h4 *ngIf="rodada.status === 'em-andamento'">Rodada em Andamento</h4>
+          <h4 *ngIf="rodada.status === 'aguardando'">Aguardando Resultados</h4>
+          <p class="mb-0">Os resultados serão divulgados após o término da rodada.</p>
+        </div>
+      </div>
+
+      <!-- Resultados Finalizados -->
+      <div *ngIf="rodada.status === 'finalizado'">
+        <!-- Vencedores Destaque -->
+        <div class="card-body" *ngIf="rodada.vencedores.length > 0">
+          <h5 class="mb-4">
+            <i class="fas fa-trophy text-warning me-2"></i>
+            🎉 Parabéns aos Vencedores!
+          </h5>
+          <div class="row g-3">
+            <div class="col-12 col-md-6" *ngFor="let vencedor of rodada.vencedores">
+              <div class="winner-card">
+                <div class="winner-trophy">
+                  <i class="fas fa-crown"></i>
+                </div>
+                <div class="winner-info">
+                  <h4 class="winner-name">{{vencedor.nome}}</h4>
+                  <div class="winner-stats">
+                    <span class="stat-item">
+                      <i class="fas fa-bullseye me-1"></i>
+                      {{vencedor.acertos}} acertos
+                    </span>
+                    <span class="stat-item">
+                      <i class="fas fa-money-bill-wave me-1"></i>
+                      R$ {{vencedor.premio}},00
+                    </span>
+                  </div>
+                  <div class="winner-phone" *ngIf="vencedor.telefone">
+                    <small class="text-muted">
+                      <i class="fas fa-phone me-1"></i>
+                      {{vencedor.telefone}}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ranking Completo -->
+        <div class="card-body border-top">
+          <h5 class="mb-4">
+            <i class="fas fa-list-ol me-2"></i>
+            Ranking Completo
+          </h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Pos.</th>
+                  <th>Nome</th>
+                  <th>Acertos</th>
+                  <th>Prêmio</th>
+                  <th>Contato</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let participante of rodada.participantes" 
+                    [class]="getPosicaoClass(participante.posicao)">
+                  <td>
+                    <span class="position-badge">
+                      <i [class]="getPosicaoIcon(participante.posicao)"></i>
+                      {{participante.posicao}}°
+                    </span>
+                  </td>
+                  <td>
+                    <strong>{{participante.nome}}</strong>
+                  </td>
+                  <td>
+                    <span class="badge bg-primary">{{participante.acertos}} acertos</span>
+                  </td>
+                  <td>
+                    <span *ngIf="participante.premio > 0" class="text-success fw-bold">
+                      <i class="fas fa-money-bill-wave me-1"></i>
+                      R$ {{participante.premio}},00
+                    </span>
+                    <span *ngIf="participante.premio === 0" class="text-muted">
+                      -
+                    </span>
+                  </td>
+                  <td class="telefone-col">
+                    <span *ngIf="participante.telefone">
+                      {{participante.telefone}}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estatísticas do Bolão -->
+        <div class="card fade-in-up mt-4" *ngIf="getRodadaAtual() as rodada" [hidden]="rodada?.status !== 'finalizado'">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">
+          <i class="fas fa-chart-bar me-2"></i>
+          Estatísticas do Bolão - {{rodada.nome}}
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row text-center">
+          <div class="col-6 col-md-3">
+            <div class="stat-item">
+              <h3 class="text-success">{{rodada.totalParticipantes}}</h3>
+              <p class="mb-0 text-muted">Participantes</p>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-item">
+              <h3 class="text-warning">{{rodada.vencedores.length}}</h3>
+              <p class="mb-0 text-muted">Vencedores</p>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-item">
+              <h3 class="text-primary">R$ {{rodada.premioTotal}},00</h3>
+              <p class="mb-0 text-muted">Prêmio Total</p>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-item">
+              <h3 class="text-info">{{rodada.vencedores.length > 0 ? rodada.vencedores[0].acertos : 0}}</h3>
+              <p class="mb-0 text-muted">Melhor Resultado</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

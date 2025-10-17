@@ -1,0 +1,382 @@
+<div class="row">
+  <div class="col-12">
+    <!-- Header do Bolão -->
+    <div class="card fade-in-up mb-4">
+      <div class="card-header" style="background: linear-gradient(135deg, #dc3545, #fd7e14); color: white;">
+        <h2 class="mb-0">
+          <i class="fas fa-trophy me-2"></i>
+          Bolão da Rodada 29
+        </h2>
+        <small class="opacity-75">Taxa: R$ 10,00 • Prêmio: R$ 100,00! 💰</small>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-info">
+          <h5><i class="fas fa-info-circle me-2"></i>Como Funciona:</h5>
+          <ul class="mb-0">
+            <li><strong>Taxa de participação:</strong> R$ 10,00 por apostador</li>
+            <li>Preencha o placar de <strong>todos os 10 jogos</strong> da rodada</li>
+            <li>Envie seus palpites até <strong>sexta-feira às 18h</strong></li>
+            <li>Quem acertar mais resultados <strong>ganha R$ 100,00!</strong></li>
+            <li>Em caso de empate, o prêmio é dividido</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário de Palpites -->
+    <div class="card fade-in-up">
+      <div class="card-header bg-dark text-white">
+        <h4 class="mb-0">
+          <i class="fas fa-futbol me-2"></i>
+          Seus Palpites - Rodada 29
+        </h4>
+      </div>
+      <div class="card-body">
+        <form #palpitesForm="ngForm" (ngSubmit)="enviarPalpites()">
+          <!-- Alerta de Validação -->
+          <div *ngIf="mostrarErros" class="alert alert-danger fade-in-up mb-4" role="alert">
+            <h6><i class="fas fa-exclamation-triangle me-2"></i>Atenção! Campos obrigatórios não preenchidos:</h6>
+            <ul class="mb-0">
+              <li *ngIf="!participante.nome">Nome completo</li>
+              <li *ngIf="!participante.email">Email</li>
+              <li *ngIf="!participante.telefone">Telefone/WhatsApp</li>
+              <li *ngIf="getJogosSemPalpite().length > 0">
+                {{getJogosSemPalpite().length}} jogo(s) sem palpite: 
+                <span *ngFor="let jogo of getJogosSemPalpite(); let last = last">
+                  {{jogo.timeCasa}} x {{jogo.timeVisitante}}<span *ngIf="!last">, </span>
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Dados do Participante -->
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <label class="form-label"><strong>Seu Nome:</strong></label>
+              <input type="text" 
+                     class="form-control" 
+                     [class.is-invalid]="mostrarErros && !participante.nome"
+                     [(ngModel)]="participante.nome" 
+                     name="nome" 
+                     required>
+              <div *ngIf="mostrarErros && !participante.nome" class="invalid-feedback">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                Nome é obrigatório
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"><strong>Email:</strong></label>
+              <input type="email" 
+                     class="form-control" 
+                     [class.is-invalid]="mostrarErros && !participante.email"
+                     [(ngModel)]="participante.email" 
+                     name="email" 
+                     required>
+              <div *ngIf="mostrarErros && !participante.email" class="invalid-feedback">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                Email é obrigatório
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"><strong>Telefone:</strong></label>
+              <input type="tel" 
+                     class="form-control" 
+                     [class.is-invalid]="mostrarErros && !participante.telefone"
+                     [(ngModel)]="participante.telefone" 
+                     name="telefone" 
+                     required>
+              <div *ngIf="mostrarErros && !participante.telefone" class="invalid-feedback">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                Telefone é obrigatório
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <!-- Jogos da Rodada -->
+          <h5 class="mb-4 text-center text-white p-3 rounded" style="background: linear-gradient(135deg, #28a745, #20c997);">
+            Jogos da Rodada 29 - Brasileirão 2025
+          </h5>
+
+          <!-- Sábado 26/10 -->
+          <div class="mb-5">
+            <div class="d-flex align-items-center mb-4">
+              <div class="badge bg-primary px-4 py-2 me-3" style="font-size: 1rem;">
+                SÁBADO
+              </div>
+              <h6 class="mb-0 text-muted">26 de Outubro de 2025</h6>
+            </div>
+            
+            <div class="row g-4">
+              <div class="col-12" *ngFor="let jogo of jogosSabado; let i = index">
+                <div class="match-card">
+                  <!-- Cabeçalho do jogo -->
+                  <div class="match-header">
+                    <span class="match-time">
+                      {{jogo.horario}}
+                    </span>
+                  </div>
+                  
+                  <!-- Times -->
+                  <div class="teams-container">
+                    <div class="team team-home">
+                      <div class="team-name">{{jogo.timeCasa}}</div>
+
+                    </div>
+                    
+                    <div class="vs-container">
+                      <div class="vs-symbol">VS</div>
+                      <div class="match-status">Rodada 29</div>
+                    </div>
+                    
+                    <div class="team team-away">
+
+                      <div class="team-name">{{jogo.timeVisitante}}</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Área de palpites -->
+                  <div class="prediction-area">
+                    <div class="prediction-header">
+                      
+                      SEU PALPITE
+                    </div>
+                    <div class="score-inputs">
+                      <div class="score-input-group">
+                        <label>{{jogo.timeCasa}}</label>
+                        <input type="number" 
+                               class="score-input" 
+                               [class.is-invalid]="jogoTemErro(jogo)"
+                               [(ngModel)]="jogo.golsCasa" 
+                               [name]="'golsCasa_s' + i"
+                               min="0" max="10" required
+                               placeholder="0">
+                      </div>
+                      <div class="score-separator">×</div>
+                      <div class="score-input-group">
+                        <label>{{jogo.timeVisitante}}</label>
+                        <input type="number" 
+                               class="score-input" 
+                               [class.is-invalid]="jogoTemErro(jogo)"
+                               [(ngModel)]="jogo.golsVisitante" 
+                               [name]="'golsVisitante_s' + i"
+                               min="0" max="10" required
+                               placeholder="0">
+                      </div>
+                    </div>
+                    <div *ngIf="jogoTemErro(jogo)" class="text-danger mt-2 text-center">
+                      <small><i class="fas fa-exclamation-triangle me-1"></i>Preencha ambos os placares</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Domingo 27/10 -->
+          <div class="mb-5">
+            <div class="d-flex align-items-center mb-4">
+              <div class="badge bg-success px-4 py-2 me-3" style="font-size: 1rem;">
+                DOMINGO
+              </div>
+              <h6 class="mb-0 text-muted">27 de Outubro de 2025</h6>
+            </div>
+            
+            <div class="row g-4">
+              <div class="col-12" *ngFor="let jogo of jogosDomingo; let i = index">
+                <div class="match-card">
+                  <!-- Cabeçalho do jogo -->
+                  <div class="match-header">
+                    <span class="match-time">
+                      {{jogo.horario}}
+                    </span>
+                  </div>
+                  
+                  <!-- Times -->
+                  <div class="teams-container">
+                    <div class="team team-home">
+                      <div class="team-name">{{jogo.timeCasa}}</div>
+
+                    </div>
+                    
+                    <div class="vs-container">
+                      <div class="vs-symbol">VS</div>
+                      <div class="match-status">Rodada 29</div>
+                    </div>
+                    
+                    <div class="team team-away">
+
+                      <div class="team-name">{{jogo.timeVisitante}}</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Área de palpites -->
+                  <div class="prediction-area">
+                    <div class="prediction-header">
+                      
+                      SEU PALPITE
+                    </div>
+                    <div class="score-inputs">
+                      <div class="score-input-group">
+                        <label>{{jogo.timeCasa}}</label>
+                        <input type="number" 
+                               class="score-input" 
+                               [(ngModel)]="jogo.golsCasa" 
+                               [name]="'golsCasa_d' + i"
+                               min="0" max="10" required
+                               placeholder="0">
+                      </div>
+                      <div class="score-separator">×</div>
+                      <div class="score-input-group">
+                        <label>{{jogo.timeVisitante}}</label>
+                        <input type="number" 
+                               class="score-input" 
+                               [(ngModel)]="jogo.golsVisitante" 
+                               [name]="'golsVisitante_d' + i"
+                               min="0" max="10" required
+                               placeholder="0">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Segunda 28/10 -->
+          <div class="mb-5">
+            <div class="d-flex align-items-center mb-4">
+              <div class="badge bg-warning text-dark px-4 py-2 me-3" style="font-size: 1rem;">
+                SEGUNDA
+              </div>
+              <h6 class="mb-0 text-muted">28 de Outubro de 2025</h6>
+            </div>
+            
+            <div class="row g-4">
+              <div class="col-12" *ngFor="let jogo of jogosSegunda; let i = index">
+                <div class="match-card">
+                  <!-- Cabeçalho do jogo -->
+                  <div class="match-header">
+                    <span class="match-time">
+                      {{jogo.horario}}
+                    </span>
+                  </div>
+                  
+                  <!-- Times -->
+                  <div class="teams-container">
+                    <div class="team team-home">
+                      <div class="team-name">{{jogo.timeCasa}}</div>
+
+                    </div>
+                    
+                    <div class="vs-container">
+                      <div class="vs-symbol">VS</div>
+                      <div class="match-status">Rodada 29</div>
+                    </div>
+                    
+                    <div class="team team-away">
+
+                      <div class="team-name">{{jogo.timeVisitante}}</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Área de palpites -->
+                  <div class="prediction-area">
+                    <div class="prediction-header">
+                      
+                      SEU PALPITE
+                    </div>
+                    <div class="score-inputs">
+                      <div class="score-input-group">
+                        <label>{{jogo.timeCasa}}</label>
+                        <input type="number" 
+                               class="score-input" 
+                               [(ngModel)]="jogo.golsCasa" 
+                               [name]="'golsCasa_m' + i"
+                               min="0" max="10" required
+                               placeholder="0">
+                      </div>
+                      <div class="score-separator">×</div>
+                      <div class="score-input-group">
+                        <label>{{jogo.timeVisitante}}</label>
+                        <input type="number" 
+                               class="score-input" 
+                               [(ngModel)]="jogo.golsVisitante" 
+                               [name]="'golsVisitante_m' + i"
+                               min="0" max="10" required
+                               placeholder="0">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botão de Envio -->
+          <div class="text-center mt-4">
+            <button type="submit" 
+                    class="btn btn-danger btn-lg px-5"
+                    [disabled]="!palpitesForm.valid || enviando"
+                    style="background: linear-gradient(135deg, #dc3545, #fd7e14); border: none;">
+              <i class="fas fa-paper-plane me-2"></i>
+              <span *ngIf="!enviando">Enviar Palpites</span>
+              <span *ngIf="enviando">
+                <i class="fas fa-spinner fa-spin me-2"></i>
+                Enviando...
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Ranking (será exibido após os resultados) -->
+    <div class="card fade-in-up mt-4" *ngIf="mostrarRanking">
+      <div class="card-header" style="background: linear-gradient(135deg, #ffd700, #ffed4e); color: #333;">
+        <h4 class="mb-0">
+          <i class="fas fa-medal me-2"></i>
+          Ranking da Rodada 29
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th class="text-center">Posição</th>
+                <th>Participante</th>
+                <th class="text-center">Acertos</th>
+                <th class="text-center">Prêmio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let participante of ranking; let i = index" 
+                  [class]="i === 0 ? 'table-warning' : ''">
+                <td class="text-center">
+                  <span class="badge" 
+                        [class]="i === 0 ? 'bg-warning text-dark' : 'bg-secondary'">
+                    {{i + 1}}º
+                  </span>
+                </td>
+                <td>
+                  <strong [class]="i === 0 ? 'text-warning' : ''">
+                    {{participante.nome}}
+                  </strong>
+                </td>
+                <td class="text-center">
+                  <strong>{{participante.acertos}}</strong>
+                </td>
+                <td class="text-center">
+                  <span *ngIf="i === 0" class="badge bg-success">R$ 100,00</span>
+                  <span *ngIf="i !== 0" class="text-muted">-</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

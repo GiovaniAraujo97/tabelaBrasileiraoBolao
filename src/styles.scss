@@ -1,1 +1,178 @@
 /* You can add global styles to this file, and also import other style files */
+
+// Angular Material Theme
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+// Bootstrap
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+// Variáveis de cores personalizadas para app de esportes
+:root {
+  --primary-green: #198754;
+  --primary-green-light: #20c997;
+  --primary-green-dark: #146c43;
+  
+  // Cores das zonas - mais suaves
+  --libertadores: rgba(40, 167, 69, 0.1);
+  --libertadores-border: rgba(40, 167, 69, 0.3);
+  --pre-libertadores: rgba(255, 193, 7, 0.1);
+  --pre-libertadores-border: rgba(255, 193, 7, 0.4);
+  --sul-americana: rgba(13, 202, 240, 0.1);
+  --sul-americana-border: rgba(13, 202, 240, 0.3);
+  --rebaixamento: rgba(220, 53, 69, 0.1);
+  --rebaixamento-border: rgba(220, 53, 69, 0.3);
+  
+  // Cores de destaque suaves
+  --gold: linear-gradient(135deg, #ffd700, #ffed4e);
+  --silver: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+  --bronze: linear-gradient(135deg, #cd7f32, #daa520);
+  
+  // Cores neutras profissionais
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+// Global styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body { 
+  height: 100%; 
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+}
+
+body { 
+  margin: 0; 
+  line-height: 1.6;
+}
+
+// Cards profissionais
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  border-radius: 12px 12px 0 0 !important;
+  border: none;
+  padding: 1.5rem;
+  font-weight: 600;
+}
+
+// Badges modernos
+.badge {
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+// Tabelas profissionais
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem 0.75rem;
+}
+
+.table td {
+  padding: 1rem 0.75rem;
+  vertical-align: middle;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+// Efeito hover nas linhas da tabela
+.table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0,0,0,0.02);
+  transform: scale(1.01);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+// Cores das zonas da tabela - mais suaves
+.zona-libertadores {
+  background: var(--libertadores) !important;
+  border-left: 4px solid var(--libertadores-border) !important;
+}
+
+.zona-pre-libertadores {
+  background: var(--pre-libertadores) !important;
+  border-left: 4px solid var(--pre-libertadores-border) !important;
+}
+
+.zona-sul-americana {
+  background: var(--sul-americana) !important;
+  border-left: 4px solid var(--sul-americana-border) !important;
+}
+
+.zona-rebaixamento {
+  background: var(--rebaixamento) !important;
+  border-left: 4px solid var(--rebaixamento-border) !important;
+}
+
+// Posições especiais na artilharia
+.posicao-ouro {
+  background: var(--gold) !important;
+  color: #333 !important;
+  font-weight: bold;
+}
+
+.posicao-prata {
+  background: var(--silver) !important;
+  color: #333 !important;
+  font-weight: bold;
+}
+
+.posicao-bronze {
+  background: var(--bronze) !important;
+  color: #333 !important;
+  font-weight: bold;
+}
+
+// Animações suaves
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+// Responsividade melhorada
+@media (max-width: 768px) {
+  .card-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .table-responsive {
+    border-radius: 8px;
+  }
+}
